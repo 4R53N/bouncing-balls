@@ -5,6 +5,8 @@ var ctx = canvas.getContext('2d');
 
 var width = canvas.width = window.innerWidth;
 var height = canvas.height = window.innerHeight;
+var timer = document.querySelector('h2');
+var startDate = Date.now();
 
 // function to generate random number
 
@@ -52,6 +54,23 @@ class Ball {
     this.x += this.velX;
     this.y += this.velY;
   }
+
+  collisionDetect(){
+    for(var i = 0; i < 25; i++){
+      if(this!==balls[i]){
+        var dx = this.x-balls[i].x;
+        var dy = this.y-balls[i].y;
+        var dr = this.size + balls[i].size;
+        var distance = Math.sqrt(dx*dx + dy*dy);
+        if(distance < dr){
+          if(this.size > balls[i].size)
+            balls[i].color = this.color;
+          else
+            this.color = balls[i].color;
+        }
+      }
+    }
+  }
 }
 
 // create 25 random balls
@@ -62,8 +81,8 @@ while (balls.length < 25){
   var ball = new Ball(
     random(0+size, width-size),
     random(0+size, height-size),
-    random(-7,7),
-    random(-7,7),
+    random(-15,15),
+    random(-15,15),
     'rgb(' + random(0,255) + ',' + random(0,255) + ',' + random(0,255) +')',
     size
     );
@@ -71,22 +90,35 @@ while (balls.length < 25){
 }
 
 function loop() {
+  
   ctx.fillStyle = 'rgba(0, 0, 0, 0.25)';
   ctx.fillRect(0, 0, width, height);
-
+  var defColor = balls[0].color;
+  var virusSpread = true;
   for(var i = 0; i < balls.length; i++){
-    balls[i].draw();
     balls[i].update();
+    balls[i].collisionDetect();
+    balls[i].draw();
+    if(balls[i].color != defColor){
+      virusSpread = false;
+    }
   }
 
+  if(virusSpread){
+    var endDate = Date.now();
+    var timeDif = endDate-startDate;
+    var timePassed = timeDif/1200;
+    alert('Virus spread in ' + timePassed + 's.');
+    return;
+  }
   requestAnimationFrame(loop);
 }
-
-
-
-loop();
 
 window.onresize = function(){
   width = canvas.width = window.innerWidth;
   height = canvas.height = window.innerHeight;
 }
+
+
+loop();
+
