@@ -82,4 +82,11 @@ function loop() {
   requestAnimationFrame(loop);
 }
 
+
+
 loop();
+
+window.onresize = function(){
+  width = canvas.width = window.innerWidth;
+  height = canvas.height = window.innerHeight;
+}
