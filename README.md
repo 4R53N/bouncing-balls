@@ -1,4 +1,4 @@
-# bouncing-balls
+# spread-of-virus
 
 A simple animation using plain HTML5/CSS3/JS. 
 
